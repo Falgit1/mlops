@@ -29,10 +29,11 @@ class ConfigurationManager:
 
     def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
         config = self.config.prepare_base_model
-
+        data_path = self.config.data_ingestion.root_dir
         create_directories([config.root_dir])
 
         prepare_base_model_config = PrepareBaseModelConfig(
+            data_path=Path(data_path),
             root_dir=Path(config.root_dir),
             base_model_path=Path(config.base_model_path),
             updated_base_model_path=Path(config.updated_base_model_path),

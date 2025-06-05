@@ -12,6 +12,7 @@ class DataIngestionConfig:
 
 @dataclass(frozen=True)
 class PrepareBaseModelConfig:
+    data_path: Path
     root_dir: Path
     base_model_path: Path
     updated_base_model_path: Path
