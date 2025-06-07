@@ -1,5 +1,3 @@
-import os
-import random
 from Plant_class import logger
 import numpy as np
 import pandas as pd
