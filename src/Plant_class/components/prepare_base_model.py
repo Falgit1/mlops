@@ -1,8 +1,3 @@
-from Plant_class import logger
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
-from PIL import Image
 import tensorflow as tf
 from pathlib import Path
 from Plant_class.config.configuration import PrepareBaseModelConfig
@@ -12,42 +7,6 @@ class PrepareBaseModel:
     def __init__(self, config: PrepareBaseModelConfig):
         self.full_model = None
         self.config = config
-
-    def load_data(self, df, data="train"):
-        width, height, channels = self.config.params_image_size
-
-        if data == "train":
-            path = "images"
-            count = df[path].count()
-            train = np.zeros((count, width, height, 3), dtype=np.uint8)
-
-        else:
-            path = "masks"
-            count = df[path].count()
-            train = np.zeros((count, width, height), dtype=np.uint8)
-
-        for i in tqdm(range(count)):
-            path1 = f"{self.config.data_path}/data/{df[path][i]}"
-            img = Image.open(path1)
-            img = img.resize((width, height), Image.LANCZOS)
-            try:
-                train[i] = np.array(img)
-            except Exception as e:
-                logger.exception(f"data loading and preprocessing {e}")
-        return train
-
-    def data_preprocessing(self):
-        df = pd.read_csv(f"{self.config.data_path}/data/train.csv")
-
-        # X data load
-        X_train = np.array(self.load_data(df))
-
-        # Y data load
-        Y_train = np.array(self.load_data(df, "test"))
-        Y_train = np.expand_dims(Y_train, axis=3)
-        Y_train = np.array(Y_train, dtype=np.bool_)
-
-        return X_train, Y_train
 
     def _prepare_full_model(self):
         width, height, channels = self.config.params_image_size

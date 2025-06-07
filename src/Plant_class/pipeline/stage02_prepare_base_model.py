@@ -13,7 +13,8 @@ class BaseModelTrainingPipeline:
         config = ConfigurationManager()
         prepare_base_model_config = config.get_prepare_base_model_config()
         prepare_base_model = PrepareBaseModel(config=prepare_base_model_config)
-        x, y = prepare_base_model.data_preprocessing()
+        # x, y = prepare_base_model.data_preprocessing()
+
         prepare_base_model.update_base_model()
 
 

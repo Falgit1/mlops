@@ -1,7 +1,7 @@
 from Plant_class import logger
 from Plant_class.pipeline.stage01_data_ingestion import DataIngestionTrainingPipeline
 from Plant_class.pipeline.stage02_prepare_base_model import BaseModelTrainingPipeline
-from Plant_class.pipeline.stage03_prepare_callbacks import CallbacksTrainingPipeline
+from Plant_class.pipeline.stage03_training import TrainingPipeline
 
 STAGE_NAME = "Data Ingestion Stage"
 
@@ -25,14 +25,13 @@ except Exception as e:
     logger.exception(e)
     raise e
 
-# STAGE_NAME = "Prepare Callbacks Stage"
-#
-# try:
-#     logger.info(f"======== Stage : {STAGE_NAME} started =========")
-#     obj = CallbacksTrainingPipeline()
-#     obj.main()
-#     logger.info(f"======== Stage : {STAGE_NAME} completed =========")
-# except Exception as e:
-#     logger.exception(e)
-#     raise e
+STAGE_NAME = "Training Stage"
 
+try:
+    logger.info(f"======== Stage : {STAGE_NAME} started =========")
+    obj = TrainingPipeline()
+    obj.main()
+    logger.info(f"======== Stage : {STAGE_NAME} completed =========")
+except Exception as e:
+    logger.exception(e)
+    raise e
