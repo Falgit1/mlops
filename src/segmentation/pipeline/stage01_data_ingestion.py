@@ -1,6 +1,6 @@
-from Plant_class.config.configuration import ConfigurationManager
-from Plant_class.components.data_ingestion import DataIngestion
-from Plant_class import logger
+from segmentation.config.configuration import ConfigurationManager
+from segmentation.components.data_ingestion import DataIngestion
+from segmentation import logger
 
 STAGE_NAME = "Data Ingestion Stage"
 

@@ -3,7 +3,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s]: %(message)s:')
 
-project_name = "Plant_class"
+project_name = "segmentation"
 
 list_of_files = [
     ".github/workflows/.gitkeep",

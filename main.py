@@ -1,7 +1,7 @@
-from Plant_class import logger
-from Plant_class.pipeline.stage01_data_ingestion import DataIngestionTrainingPipeline
-from Plant_class.pipeline.stage02_prepare_base_model import BaseModelTrainingPipeline
-from Plant_class.pipeline.stage03_training import TrainingPipeline
+from segmentation import logger
+from segmentation.pipeline.stage01_data_ingestion import DataIngestionTrainingPipeline
+from segmentation.pipeline.stage02_prepare_base_model import BaseModelTrainingPipeline
+from segmentation.pipeline.stage03_training import TrainingPipeline
 
 STAGE_NAME = "Data Ingestion Stage"
 

@@ -1,4 +1,4 @@
-from Plant_class import logger
+from segmentation import logger
 
 logger.info("hello world")
 

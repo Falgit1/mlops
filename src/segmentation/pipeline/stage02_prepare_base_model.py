@@ -1,6 +1,6 @@
-from Plant_class.config.configuration import ConfigurationManager
-from Plant_class.components.prepare_base_model import PrepareBaseModel
-from Plant_class import logger
+from segmentation.config.configuration import ConfigurationManager
+from segmentation.components.prepare_base_model import PrepareBaseModel
+from segmentation import logger
 
 STAGE_NAME = "Prepare Base Model Stage"
 

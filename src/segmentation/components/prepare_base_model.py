@@ -1,6 +1,6 @@
 import tensorflow as tf
 from pathlib import Path
-from Plant_class.config.configuration import PrepareBaseModelConfig
+from segmentation.config.configuration import PrepareBaseModelConfig
 
 
 class PrepareBaseModel:

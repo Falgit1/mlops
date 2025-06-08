@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 __version__ = "0.0.0"
 
 REPO_NAME = "mlops"
-SRC_REPO = "Plant_class"
+SRC_REPO = "segmentation"
 AUTHOR_USER_NAME = "Falgit1"
 AUTHOR_EMAIL = "parthsh17004@gmail.com"
 
@@ -15,7 +15,7 @@ setuptools.setup(
     version=__version__,
     author=AUTHOR_USER_NAME,
     author_email=AUTHOR_EMAIL,
-    description="A python package for plant classification",
+    description="A python package for image segmentation",
     long_description=long_description,
     long_description_content="text/markdown",
     url=f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}",

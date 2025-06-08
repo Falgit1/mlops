@@ -1,5 +1,5 @@
-from Plant_class.constants import *
-from Plant_class.utils.common import read_yaml, create_directories
+from segmentation.constants import *
+from segmentation.utils.common import read_yaml, create_directories
 from ..entity.config_entity import (DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig,
                                     TrainingConfig)
 import os

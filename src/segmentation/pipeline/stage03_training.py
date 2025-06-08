@@ -1,7 +1,7 @@
-from Plant_class.config.configuration import ConfigurationManager
-from Plant_class.components.prepare_callbacks import PrepareCallbacks
-from Plant_class.components.training import Training
-from Plant_class import logger
+from segmentation.config.configuration import ConfigurationManager
+from segmentation.components.prepare_callbacks import PrepareCallbacks
+from segmentation.components.training import Training
+from segmentation import logger
 
 STAGE_NAME = "Training Stage"
 

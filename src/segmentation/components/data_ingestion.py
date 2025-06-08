@@ -1,8 +1,8 @@
 import os
 import urllib.request as request
 import zipfile
-from Plant_class import logger
-from Plant_class.utils.common import get_size
+from segmentation import logger
+from segmentation.utils.common import get_size
 from ..entity.config_entity import DataIngestionConfig
 from pathlib import Path
 

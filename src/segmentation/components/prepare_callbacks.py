@@ -1,7 +1,7 @@
 import os
 import tensorflow as tf
 import time
-from Plant_class.config.configuration import PrepareCallbacksConfig
+from segmentation.config.configuration import PrepareCallbacksConfig
 
 
 class PrepareCallbacks:
