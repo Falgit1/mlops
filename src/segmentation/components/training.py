@@ -1,10 +1,10 @@
 import tensorflow as tf
-from segmentation import logger
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from PIL import Image
 from pathlib import Path
+from segmentation import logger
 from segmentation.config.configuration import TrainingConfig
 
 
