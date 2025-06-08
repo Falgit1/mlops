@@ -19,3 +19,8 @@ prepare_callbacks:
 training:
   root_dir: artifacts/training
   trained_model_path: artifacts/training/model
+
+evaluation:
+  root_dir: artifacts/evaluation
+  score_file: artifacts/evaluation/score.json
+

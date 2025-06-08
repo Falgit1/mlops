@@ -1,7 +1,7 @@
 from segmentation.constants import *
 from segmentation.utils.common import read_yaml, create_directories
 from ..entity.config_entity import (DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig,
-                                    TrainingConfig)
+                                    TrainingConfig, EvaluationConfig)
 import os
 
 
@@ -84,3 +84,19 @@ class ConfigurationManager:
         )
 
         return training_config
+
+    def get_evaluation_config(self) -> EvaluationConfig:
+        evaluation = self.config.evaluation
+        create_directories([
+            Path(evaluation.root_dir)
+        ])
+        training = self.config.training
+        eval_config = EvaluationConfig(
+            path_of_model=Path(training.trained_model_path),
+            training_data=Path(f"{self.config.data_ingestion.root_dir}/data"),
+            score_file=Path(evaluation.score_file),
+            all_params=self.params,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+        return eval_config
