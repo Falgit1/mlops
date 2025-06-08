@@ -1,0 +1,112 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python39 src/segmentation/pipeline/stage01_data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 536948212b18d88cf91148e62d212f0d
+      size: 934
+    - path: src/segmentation/pipeline/stage01_data_ingestion.py
+      hash: md5
+      md5: 05a1b8b9ec3b4d2d92ab7d860a508d1c
+      size: 903
+    outs:
+    - path: artifacts/data_ingestion/data
+      hash: md5
+      md5: 6d877b204de8907f379d91fe4588e192.dir
+      size: 14712755
+      nfiles: 581
+  prepare_base_model:
+    cmd: python39 src/segmentation/pipeline/stage02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 536948212b18d88cf91148e62d212f0d
+      size: 934
+    - path: src/segmentation/pipeline/stage02_prepare_base_model.py
+      hash: md5
+      md5: d9f899bcae63519204d818aa34a67dcd
+      size: 890
+    params:
+      params.yaml:
+        IMAGE_SIZE:
+        - 128
+        - 128
+        - 3
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 286771f38fee7ed77d113462ba702ba1.dir
+      size: 8536557
+      nfiles: 4
+  training:
+    cmd: python39 src/segmentation/pipeline/stage03_training.py
+    deps:
+    - path: artifacts/data_ingestion/data
+      hash: md5
+      md5: 6d877b204de8907f379d91fe4588e192.dir
+      size: 14712755
+      nfiles: 581
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 286771f38fee7ed77d113462ba702ba1.dir
+      size: 8536557
+      nfiles: 4
+    - path: config/config.yaml
+      hash: md5
+      md5: 536948212b18d88cf91148e62d212f0d
+      size: 934
+    - path: src/segmentation/components/prepare_callbacks.py
+      hash: md5
+      md5: 02904c2e82523695118a634cadd72a03
+      size: 940
+    - path: src/segmentation/pipeline/stage03_training.py
+      hash: md5
+      md5: 57df05d04048c4e80a2b2137675d5047
+      size: 1230
+    params:
+      params.yaml:
+        BATCH_SIZE: 16
+        EPOCHS: 25
+        IMAGE_SIZE:
+        - 128
+        - 128
+        - 3
+        V_SPLIT: 0.1
+    outs:
+    - path: artifacts/training/model
+      hash: md5
+      md5: 35103d0e5f33c64b2564d27d6f4aeb68.dir
+      size: 24224111
+      nfiles: 4
+  evaluation:
+    cmd: python39 src/segmentation/pipeline/stage04_evaluation.py
+    deps:
+    - path: artifacts/data_ingestion/data
+      hash: md5
+      md5: 6d877b204de8907f379d91fe4588e192.dir
+      size: 14712755
+      nfiles: 581
+    - path: artifacts/training/model
+      hash: md5
+      md5: 35103d0e5f33c64b2564d27d6f4aeb68.dir
+      size: 24224111
+      nfiles: 4
+    - path: config/config.yaml
+      hash: md5
+      md5: 536948212b18d88cf91148e62d212f0d
+      size: 934
+    - path: src/segmentation/pipeline/stage04_evaluation.py
+      hash: md5
+      md5: 61d76ff9fdf1f016e27f9a550caf7425
+      size: 1086
+    - path: src/segmentation/utils/common.py
+      hash: md5
+      md5: d57befb886c73ec3c09b87b1a6c144b7
+      size: 3764
+    outs:
+    - path: artifacts/evaluation/score.json
+      hash: md5
+      md5: c59809abffc9cc8c00431b59b817193a
+      size: 73
