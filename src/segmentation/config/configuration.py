@@ -66,13 +66,15 @@ class ConfigurationManager:
         params = self.params
         data_path = self.config.data_ingestion.root_dir
 
-        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "image_segmentation")
-        create_directories([
-            Path(training.root_dir)
-        ])
+        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "data")
+        if not os.path.exists(training.root_dir):
+            create_directories([
+                Path(training.root_dir)
+            ])
 
         training_config = TrainingConfig(
             data_path=Path(data_path),
+            continue_training=params.CONTINUE_TRAINING,
             root_dir=Path(training.root_dir),
             trained_model_path=Path(training.trained_model_path),
             updated_base_model_path=Path(prepare_base_model.updated_base_model_path),

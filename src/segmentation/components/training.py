@@ -6,17 +6,22 @@ from PIL import Image
 from pathlib import Path
 from segmentation import logger
 from segmentation.config.configuration import TrainingConfig
+import os
 
 
 class Training:
     def __init__(self, config: TrainingConfig):
-        self.model = None
+
         self.config = config
 
     def get_base_model(self):
-        self.model = tf.keras.models.load_model(
-            self.config.updated_base_model_path
-        )
+        if self.config.continue_training and os.path.exists(self.config.trained_model_path):
+            self.model = tf.keras.models.load_model(self.config.trained_model_path)
+
+        else:
+            self.model = tf.keras.models.load_model(
+                self.config.updated_base_model_path
+            )
 
     def load_data(self, df, data="train"):
         width, height, channels = self.config.params_image_size

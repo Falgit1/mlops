@@ -30,8 +30,11 @@ stages:
       - EPOCHS
       - BATCH_SIZE
       - V_SPLIT
+      - CONTINUE_TRAINING
     outs:
-      - artifacts/training/model
+      - artifacts/training/model:
+          persist: true
+
 
   evaluation:
     cmd: python39 src/segmentation/pipeline/stage04_evaluation.py

@@ -29,6 +29,7 @@ class PrepareCallbacksConfig:
 @dataclass(frozen=True)
 class TrainingConfig:
     data_path: Path
+    continue_training: bool
     root_dir: Path
     trained_model_path: Path
     updated_base_model_path: Path
