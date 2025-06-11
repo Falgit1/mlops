@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
-from PIL import Image
 import numpy as np
-from segmentation.constants import *
+from PIL import Image
 from tensorflow.keras.models import load_model
+
+from segmentation.constants import *
 from segmentation.utils.common import read_yaml
 
 
@@ -14,7 +15,7 @@ class Prediction:
 
         self.background_filepath = background_filepath
         self.width, self.height, self.channels = self.params.IMAGE_SIZE
-        self.model_path = r"E:\jupyter\image segmentation\Project2\segmentation_VB.hdf5"#self.config.training.trained_model_path
+        self.model_path = r"E:\jupyter\image segmentation\Project2\segmentation_VB.hdf5"  # self.config.training.trained_model_path
         self.model = load_model(self.model_path)
 
     def preprocessing(self, image):
