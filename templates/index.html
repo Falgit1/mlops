@@ -1,139 +1,305 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Segmentation</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    />
+    <title>Image Segmentation App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-      body {
-        background-color: #eff2f9;
+      /* Frosted Glass Navbar */
+      .navbar-glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       }
-      .img-container,
-      .result-container {
-        text-align: center;
-        margin-top: 20px;
+
+      /* Gradient Button */
+      .btn-gradient {
+        background: linear-gradient(45deg, #4f46e5, #a855f7);
+        transition: all 0.3s ease;
       }
-      .image-preview,
-      .result-preview {
-        border: 2px solid #1b2d6b;
-        width: 300px;
-        height: 300px;
-        display: inline-block;
-      }
-      #photo,
-      .segmented-image {
-        width: 100%;
-        height: 100%;
-        display: none;
-      }
-      .loader {
-        display: none;
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #363e75;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 2s linear infinite;
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+      .btn-gradient:hover {
+        background: linear-gradient(45deg, #4338ca, #9333ea);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <h3 class="text-center py-4">Image Segmentation</h3>
+  <body
+    class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6"
+  >
+    <!-- Navbar -->
+    <nav class="navbar-glass w-full py-4 px-6 text-center">
+      <h1 class="text-3xl font-bold">Image Segmentation</h1>
+    </nav>
 
-      <div class="img-container">
-        <div class="image-preview">
-          <img id="photo" src="" alt="Uploaded Image" />
-        </div>
-      </div>
+    <!-- Upload Section -->
+    <div
+      class="max-w-2xl bg-white bg-opacity-10 rounded-lg p-6 text-center mt-8 shadow-lg"
+    >
+      <h2 class="text-xl font-semibold text-gray-300 mb-4">
+        Upload an Image for Segmentation
+      </h2>
 
-      <div class="text-center mt-3">
-        <input type="file" id="fileinput" hidden />
-        <button class="btn btn-primary" id="upload-btn">Upload Image</button>
-        <button class="btn btn-success" id="predict-btn">Segment</button>
-      </div>
+      <input
+        type="file"
+        id="imageInput"
+        class="hidden"
+        onchange="handleImageChange(event)"
+      />
+      <label
+        for="imageInput"
+        class="btn-gradient inline-block text-white py-2 px-6 rounded-lg font-semibold cursor-pointer"
+      >
+        Select Image
+      </label>
 
-      <div class="loader mx-auto mt-3" id="loading"></div>
-
-      <div class="result-container">
-        <h5 class="mt-3">Segmented Output</h5>
-        <div class="result-preview">
+      <button
+        class="btn-gradient inline-block text-white py-2 px-6 rounded-lg font-semibold cursor-pointer"
+        onclick="handleUpload()"
+      >
+        Upload
+      </button>
+    </div>
+    <!-- Image Display -->
+    <div class="flex flex-col items-center mt-6">
+      <div class="flex gap-4 justify-center">
+        <div class="text-center">
+          <h3 class="text-lg font-semibold text-gray-300 mb-2">
+            Original Image
+          </h3>
           <img
-            class="segmented-image"
-            id="seg-result"
-            src=""
-            alt="Segmented Image"
+            id="originalImage"
+            class="hidden w-64 h-64 rounded-lg shadow-md"
+            alt="Original Image"
+          />
+        </div>
+        <div class="text-center">
+          <h3 class="text-lg font-semibold text-gray-300 mb-2">
+            Predicted Mask
+          </h3>
+          <img
+            id="predictedMask"
+            class="hidden w-64 h-64 rounded-lg shadow-md"
+            alt="Segmented Mask"
           />
         </div>
       </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
-      let base_data = "";
-
-      function sendRequest(base64Data) {
-        if (!base64Data) return alert("Please upload an image first!");
-
-        $("#loading").show();
-        $.ajax({
-          url: "http://127.0.0.1:8080/predict",
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({ image: base64Data }),
-          success: function (res) {
-            $("#loading").hide();
-            if (res.result_image) {
-              $("#seg-result")
-                .attr("src", "data:image/jpeg;base64," + res.result_image)
-                .show();
-            } else {
-              alert("Error processing image.");
-            }
-          },
-          error: function () {
-            $("#loading").hide();
-            alert("Failed to connect to the server.");
-          },
-        });
+      function handleImageChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const imgElement = document.getElementById("originalImage");
+          imgElement.src = URL.createObjectURL(file);
+          imgElement.classList.remove("hidden"); // Un-hide the image
+        }
       }
 
-      $("#upload-btn").click(() => $("#fileinput").trigger("click"));
+      async function handleUpload() {
+        const fileInput = document.getElementById("imageInput");
 
-      $("#fileinput").change(function () {
-        if (this.files && this.files[0]) {
-          let reader = new FileReader();
-          reader.onload = function (e) {
-            let img = new Image();
-            img.onload = function () {
-              let canvas = document.createElement("canvas");
-              canvas.width = img.width;
-              canvas.height = img.height;
-              let ctx = canvas.getContext("2d");
-              ctx.drawImage(img, 0, 0);
-              base_data = canvas.toDataURL("image/jpeg", 1.0).split(",")[1];
-            };
-            img.src = e.target.result;
-            $("#photo").attr("src", e.target.result).show();
-          };
-          reader.readAsDataURL(this.files[0]);
+        if (!fileInput.files.length) {
+          alert("Please select an image first!");
+          return;
         }
-      });
 
-      $("#predict-btn").click(() => sendRequest(base_data));
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = async function () {
+          const base64Image = reader.result.split(",")[1]; // Extract Base64 Data
+
+          const requestData = { image: base64Image };
+
+          try {
+            const response = await fetch("http://127.0.0.1:8080/predict", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(requestData),
+            });
+
+            console.log("Response Status:", response.status);
+
+            if (!response.ok) {
+              throw new Error(
+                `Server responded with status ${response.status}`
+              );
+            }
+
+            const data = await response.json();
+            console.log("Response Data:", data);
+
+            const maskImage = document.getElementById("predictedMask");
+            maskImage.src = `data:image/jpeg;base64,${data.result_image}`;
+            maskImage.classList.remove("hidden");
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Upload failed. Check the console for details.");
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      // GSAP Animations
+      gsap.fromTo(
+        "h1",
+        { y: -50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.5 }
+      );
+      gsap.fromTo(
+        "label",
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1, delay: 0.5 }
+      );
+      gsap.fromTo(
+        "button",
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1, delay: 0.7 }
+      );
     </script>
   </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--  <head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--    <title>Image Segmentation</title>-->
+<!--    <link-->
+<!--      rel="stylesheet"-->
+<!--      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"-->
+<!--    />-->
+<!--    <style>-->
+<!--      body {-->
+<!--        background-color: #eff2f9;-->
+<!--      }-->
+<!--      .img-container,-->
+<!--      .result-container {-->
+<!--        text-align: center;-->
+<!--        margin-top: 20px;-->
+<!--      }-->
+<!--      .image-preview,-->
+<!--      .result-preview {-->
+<!--        border: 2px solid #1b2d6b;-->
+<!--        width: 300px;-->
+<!--        height: 300px;-->
+<!--        display: inline-block;-->
+<!--      }-->
+<!--      #photo,-->
+<!--      .segmented-image {-->
+<!--        width: 100%;-->
+<!--        height: 100%;-->
+<!--        display: none;-->
+<!--      }-->
+<!--      .loader {-->
+<!--        display: none;-->
+<!--        border: 8px solid #f3f3f3;-->
+<!--        border-top: 8px solid #363e75;-->
+<!--        border-radius: 50%;-->
+<!--        width: 60px;-->
+<!--        height: 60px;-->
+<!--        animation: spin 2s linear infinite;-->
+<!--      }-->
+<!--      @keyframes spin {-->
+<!--        0% {-->
+<!--          transform: rotate(0deg);-->
+<!--        }-->
+<!--        100% {-->
+<!--          transform: rotate(360deg);-->
+<!--        }-->
+<!--      }-->
+<!--    </style>-->
+<!--  </head>-->
+<!--  <body>-->
+<!--    <div class="container">-->
+<!--      <h3 class="text-center py-4">Image Segmentation</h3>-->
+
+<!--      <div class="img-container">-->
+<!--        <div class="image-preview">-->
+<!--          <img id="photo" src="" alt="Uploaded Image" />-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="text-center mt-3">-->
+<!--        <input type="file" id="fileinput" hidden />-->
+<!--        <button class="btn btn-primary" id="upload-btn">Upload Image</button>-->
+<!--        <button class="btn btn-success" id="predict-btn">Segment</button>-->
+<!--      </div>-->
+
+<!--      <div class="loader mx-auto mt-3" id="loading"></div>-->
+
+<!--      <div class="result-container">-->
+<!--        <h5 class="mt-3">Segmented Output</h5>-->
+<!--        <div class="result-preview">-->
+<!--          <img-->
+<!--            class="segmented-image"-->
+<!--            id="seg-result"-->
+<!--            src=""-->
+<!--            alt="Segmented Image"-->
+<!--          />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+<!--    <script>-->
+<!--      let base_data = "";-->
+
+<!--      function sendRequest(base64Data) {-->
+<!--        if (!base64Data) return alert("Please upload an image first!");-->
+
+<!--        $("#loading").show();-->
+<!--        $.ajax({-->
+<!--          url: "http://127.0.0.1:8080/predict",-->
+<!--          type: "POST",-->
+<!--          contentType: "application/json",-->
+<!--          data: JSON.stringify({ image: base64Data }),-->
+<!--          success: function (res) {-->
+<!--            $("#loading").hide();-->
+<!--            if (res.result_image) {-->
+<!--              $("#seg-result")-->
+<!--                .attr("src", "data:image/jpeg;base64," + res.result_image)-->
+<!--                .show();-->
+<!--            } else {-->
+<!--              alert("Error processing image.");-->
+<!--            }-->
+<!--          },-->
+<!--          error: function () {-->
+<!--            $("#loading").hide();-->
+<!--            alert("Failed to connect to the server.");-->
+<!--          },-->
+<!--        });-->
+<!--      }-->
+
+<!--      $("#upload-btn").click(() => $("#fileinput").trigger("click"));-->
+
+<!--      $("#fileinput").change(function () {-->
+<!--        if (this.files && this.files[0]) {-->
+<!--          let reader = new FileReader();-->
+<!--          reader.onload = function (e) {-->
+<!--            let img = new Image();-->
+<!--            img.onload = function () {-->
+<!--              let canvas = document.createElement("canvas");-->
+<!--              canvas.width = img.width;-->
+<!--              canvas.height = img.height;-->
+<!--              let ctx = canvas.getContext("2d");-->
+<!--              ctx.drawImage(img, 0, 0);-->
+<!--              base_data = canvas.toDataURL("image/jpeg", 1.0).split(",")[1];-->
+<!--            };-->
+<!--            img.src = e.target.result;-->
+<!--            $("#photo").attr("src", e.target.result).show();-->
+<!--          };-->
+<!--          reader.readAsDataURL(this.files[0]);-->
+<!--        }-->
+<!--      });-->
+
+<!--      $("#predict-btn").click(() => sendRequest(base_data));-->
+<!--    </script>-->
+<!--  </body>-->
+<!--</html>-->
